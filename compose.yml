@@ -1,0 +1,23 @@
+services:
+  # grafiles-frontend:
+  #   build: ./frontend
+  #   ports:
+  #     - "3000:3000"
+  grafiles-frontend-dev:
+    build: 
+      context: ./frontend
+      dockerfile: Dev.Dockerfile
+    ports:
+      - "3000:3000"
+  # grafiles-backend:
+  #   build: ./backend
+  #   ports:
+  #     - "8000:8000"
+  # grafiles-database:
+  #   image: mongo
+  #   restart: always
+  #   ports:
+  #     - '27017:27017'
+  #   environment:
+  #     MONGO_INITDB_ROOT_USERNAME: root
+  #     MONGO_INITDB_ROOT_PASSWORD: example
