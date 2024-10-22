@@ -3,9 +3,18 @@ import { compare } from 'bcrypt';
 import { UsersService } from 'src/users/users.service';
 import { LoginDto } from './dto/login.dto';
 import { JwtService } from '@nestjs/jwt';
+import { UpdatePasswordDto } from './dto/update-password.dto';
 
 @Injectable()
 export class AuthService {
+  async updatePassword(userId: string, passwordDto: UpdatePasswordDto) {
+    const { password } = passwordDto;
+    const user = await this.usersService.findById(userId);
+    if (!user) {
+      throw new UnauthorizedException('Usuario inexistente o inválido');
+    }
+    await this.usersService.updatePassword(userId, password);
+  }
   constructor(
     private usersService: UsersService,
     private jwtService: JwtService,

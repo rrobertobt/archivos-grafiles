@@ -5,9 +5,15 @@
     <NuxtLayout>
       <slot />
     </NuxtLayout>
+    <Toast
+      position="top-center"
+      :pt="{ detail: { class: '!text-xs' }, summary: { class: '!text-sm !font-semibold' } }"
+    />
   </div>
 </template>
 <script setup>
+  import Toast from "primevue/toast";
+
   function toggleDarkMode() {
     const element = document.querySelector("html");
     element.classList.toggle("my-app-dark");

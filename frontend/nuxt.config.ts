@@ -19,7 +19,7 @@ export default defineNuxtConfig({
     ],
     // styles: ['normal', 'italic'],
   },
-  modules: ['@primevue/nuxt-module', '@nuxt/fonts', '@nuxtjs/tailwindcss', '@nuxt/icon'],
+  modules: ['@primevue/nuxt-module', '@nuxt/fonts', '@nuxtjs/tailwindcss', '@nuxt/icon', '@pinia/nuxt'],
   postcss: {
     plugins: {
       tailwindcss: {},

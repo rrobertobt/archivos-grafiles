@@ -1,18 +1,18 @@
 <template>
   <div class="w-full">
-    <Breadcrumb 
-    pt:root:class="!bg-surface-50 rounded-xl "
+    <!-- <Breadcrumb 
+    pt:root:class="rounded-xl "
     class="mb-4"
     :home="{ icon: 'lucide:folder-root', to:'/employee/files', label: 'Inicio'}" :model="breadcrumbItems">
     <template #item="{ item, props }">
-      <NuxtLink :to="item.to" class="flex items-center gap-x-2 hover:underline">
+      <NuxtLink :to="item.to" class="flex items-center gap-x-2 hover:underline ">
         <Icon :name="item.icon" v-if="item.icon"/>
         {{ item.label }}</NuxtLink>
     </template>
-    </Breadcrumb>
+    </Breadcrumb> -->
     <div class=" w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
       <!-- replace manually created cards with a v-for -->
-      <Card @dblclick="navigateTo('/employee/files/aslkjdfkads')"
+      <Card @dblclick="navigateTo('/employee/files/folder/othermongogeneratedobjectid')"
         pt:root:class="hover:bg-primary/5 !shadow-none border-2 border-primary/10 hover:shadow-md transition-all"
         v-for="i in 6" :key="i"
         @click="()=>{if(selected === i ) selected = null}"
@@ -34,15 +34,6 @@
 <script setup>
 
 const route = useRoute();
-
-const breadcrumbItems = computed(() => {
-  return !route.params.path ? [] : route.params.path.map((item,index) => {
-    return {
-      label: item,
-      to: `/employee/files/${route.params.path.slice(0, index + 1).join('/')}`,
-    };
-  })
-})
 
 const selected = ref(null);
 
