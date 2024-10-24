@@ -94,8 +94,9 @@ export const useSessionStore = defineStore('session', () => {
       session.value = response
       return response
     } catch (error) {
+      console.log(error)
       return {
-        error: error.data.message
+        error: error.data?.message ?? error.name
       }
     } finally {
       loading.value = false

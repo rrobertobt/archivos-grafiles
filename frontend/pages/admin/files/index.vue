@@ -1,21 +1,25 @@
 <template>
-  <div class="w-full" v-if="folderData">
-    <FilesBreadcrum role="admin" :display_path="display_path" />
-    <FilesView role="admin" :subarchives="folderData.subarchives" />
+  <div class="w-full" v-if="data.results">
+    <div class="flex gap-x-2">
+      <FolderDialog :parent-directory-id="root_directory" @saved="refresh" />
+      <FileUploadDialog :parent-directory-id="root_directory" @saved="refresh" />
+    </div>
+    <FilesBreadcrum role="admin" :display-path="data.display_path" />
+    <FilesView role="admin" :subarchives="data.results.subarchives" @deleted="refresh" :current-directory="root_directory" />
   </div>
 </template>
 <script setup>
 import FilesBreadcrum from '~/components/FilesBreadcrum.vue';
 import FilesView from '~/components/FilesView.vue';
+import FileUploadDialog from '~/components/FileUploadDialog.vue';
 
   const { session } = storeToRefs(useSessionStore());
+  const { root_directory } = session.value;
 
   const {
-    data: {
-      value: { results: folderData, display_path },
-    },
+    data,
+    refresh
   } = await useAsyncData(() => {
-    const { root_directory } = session.value;
     return $api(`/directories/${root_directory}`);
   });
 

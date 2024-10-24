@@ -1,8 +1,7 @@
 import { IsEnum, IsIn, IsNotEmpty, IsString } from "class-validator";
 
 export class CreateArchiveDto {
-  @IsNotEmpty()
-  @IsString()
+  @IsNotEmpty({message: "El nombre es requerido"})
   name: string;
 
   @IsNotEmpty()

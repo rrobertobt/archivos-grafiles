@@ -42,7 +42,7 @@
         </template>
       </Menu>
 
-      <h4 class="text-lg my-2 font-semibold">Ubicaciones</h4>
+      <h4 class="text-lg my-2 font-semibold select-none">Ubicaciones</h4>
 
       <Menu :model="sidebarItems" class="py-0 !border-none !bg-transparent">
         <template #item="{ item, props }">
@@ -124,7 +124,7 @@
           </template>
         </Menu>
 
-        <h4 class="text-lg my-2 font-semibold">Ubicaciones</h4>
+        <h4 class="text-lg my-2 font-semibold select-none">Ubicaciones</h4>
 
         <Menu :model="sidebarItems" class="py-0 !border-none !bg-transparent">
           <template #item="{ item, props }">

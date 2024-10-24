@@ -45,7 +45,7 @@
         </template>
       </Menu>
 
-      <h4 class="text-lg my-2 font-semibold">Ubicaciones</h4>
+      <h4 class="text-lg my-2 font-semibold select-none">Ubicaciones</h4>
 
       <Menu
         :model="sidebarItems"
@@ -54,7 +54,6 @@
           itemContent: { class: 'hover:!bg-primary/20 !rounded-lg' },
         }"
       >
-        <!-- <Menu :model="sidebarItems" class="py-0 !border-none" :pt:itemContent:class="'!bg-indigo-500'"> -->
         <template #item="{ item, props }">
           <NuxtLink
             class="flex items-center p-2 rounded-lg my-0.5"
@@ -140,7 +139,7 @@
           </template>
         </Menu>
 
-        <h4 class="text-lg my-2 font-semibold">Ubicaciones</h4>
+        <h4 class="text-lg my-2 font-semibold select-none">Ubicaciones</h4>
 
         <Menu
           :model="sidebarItems"
@@ -149,7 +148,6 @@
             itemContent: { class: 'hover:!bg-primary/20 !rounded-lg' },
           }"
         >
-          <!-- <Menu :model="sidebarItems" class="py-0 !border-none" :pt:itemContent:class="'!bg-indigo-500'"> -->
           <template #item="{ item, props }">
             <NuxtLink
               class="flex items-center p-2 rounded-lg my-0.5"

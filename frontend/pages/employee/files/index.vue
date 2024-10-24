@@ -1,23 +1,28 @@
 <template>
-  <div class="w-full" v-if="folderData">
-    <FilesBreadcrum role="employee" :display-path="display_path" />
-    <FilesView role="employee" :subarchives="folderData.subarchives" />
+  <div class="w-full" v-if="data.results">
+    <div class="flex gap-x-2">
+      <FolderDialog :parent-directory-id="root_directory" @saved="refresh" />
+      <FileUploadDialog :parent-directory-id="root_directory" @saved="refresh" />
+    </div>
+    <FilesBreadcrum role="employee" :display-path="data.display_path" />
+    <FilesView role="employee" :subarchives="data.results.subarchives" @deleted="refresh" :current-directory="root_directory" />
   </div>
 </template>
 <script setup>
+import FileUploadDialog from '~/components/FileUploadDialog.vue';
+import FolderDialog from '~/components/FolderDialog.vue';
+
   const { session } = storeToRefs(useSessionStore());
+  const { root_directory } = session.value;
 
   const {
-    data: {
-      value: { results: folderData, display_path },
-    },
-  } = await useAsyncData(() => {
-    const { root_directory } = session.value;
-    return $api(`/directories/${root_directory}`);
-  });
+    data,
+    refresh
+  } = await useAsyncData(() => $api(`/directories/${root_directory}`));
 
   definePageMeta({
     layout: "employee",
   });
 </script>
-<style scoped></style>
+<style scoped>
+</style>

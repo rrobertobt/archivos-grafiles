@@ -59,6 +59,7 @@ export async function mainSeeder() {
     owner: resultUser.insertedId,
     created_at: new Date(),
     shared: false,
+    in_trash: false,
     subarchives: [],
   });
   console.log('Directorio raíz creado con ID:', rootDir.insertedId);
@@ -71,6 +72,7 @@ export async function mainSeeder() {
     owner: resultAdmin.insertedId,
     created_at: new Date(),
     shared: false,
+    in_trash: false,
     subarchives: [],
   });
   console.log('Directorio raíz creado con ID:', rootDirAdmin.insertedId);
