@@ -11,8 +11,10 @@ import {
 } from '@nestjs/common';
 import { CatsService } from './cats.service';
 import { CreateCatDto } from './dto/create-cat.dto';
-import { UpdateCatDto } from './dto/update-cat.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { Express, Request } from 'express';
+// import { Multer } from 'multer';
+
 
 @Controller('cats')
 export class CatsController {

@@ -1,6 +1,7 @@
 import { definePreset } from "@primevue/themes";
 import Aura from '@primevue/themes/aura';
 
+
 const commonOptionsDefaults = {
   // darkModeSelector: '.my-app-dark'
 }
@@ -10,6 +11,16 @@ const commonComponentsDefaults = {
   },
   menu: {
     background: 'transparent !important',
+  },
+  breadcrumb: {
+    colorScheme: {
+      light: {
+        background: '{zinc.100}',
+      },
+      dark: {
+        background: '{zinc.900}',
+      }
+    }
   }
 }
 
@@ -60,6 +71,7 @@ export const AuraWithNoir = definePreset(Aura, {
   name: 'AuraWithNoir',
   components: commonComponentsDefaults,
   semantic: {
+    
     primary: {
       50: '{zinc.50}',
       100: '{zinc.100}',
@@ -102,6 +114,6 @@ export const AuraWithNoir = definePreset(Aura, {
           focusColor: 'rgba(255,255,255,.87)'
         }
       }
-    }
+    },
   }
 })

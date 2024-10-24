@@ -5,7 +5,16 @@
     credentials.password = 'empleado1password'
   }"
   >
-    set test data
+    set test data employee
+  </button>
+  <button
+  class="block"
+  @click="()=>{
+    credentials.username = 'admin'
+    credentials.password = 'adminpassword'
+  }"
+  >
+    set test data admin
   </button>
   <div class="min-h-screen flex items-center justify-center p-4">
     <Card class="p-3 w-full md:w-4/12">

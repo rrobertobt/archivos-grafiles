@@ -1,10 +1,12 @@
 <template>
   <div class="w-full" v-if="folderData">
-    <FilesBreadcrum role="employee" :display-path="display_path" />
-    <FilesView role="employee" :subarchives="folderData.subarchives" />
+    <FilesBreadcrum role="admin" :display_path="display_path" />
+    <FilesView role="admin" :subarchives="folderData.subarchives" />
   </div>
 </template>
 <script setup>
+import FilesView from '~/components/FilesView.vue';
+
   const route = useRoute();
 
   const {
@@ -16,8 +18,7 @@
   });
 
   definePageMeta({
-    layout: "employee",
+    layout: "admin",
   });
-
 </script>
 <style scoped></style>

@@ -7,17 +7,23 @@ import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { JwtModule } from '@nestjs/jwt';
 import { jwtConstants } from './auth/constants';
+import { DirectoriesModule } from './directories/directories.module';
+import * as dotenv from 'dotenv';
+
+dotenv.config();
 
 @Module({
   imports: [
-    MongooseModule.forRoot('mongodb://localhost:27017', {
-      authMechanism: 'DEFAULT',
-      dbName: 'testdb',
-      auth: {
-        password: 'example',
-        username: 'root',
-      },
-    }),
+    MongooseModule.forRoot(
+      `mongodb://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@${process.env.MONGO_HOST}:${process.env.MONGO_PORT}`,
+      {
+        authMechanism: 'DEFAULT',
+        dbName: process.env.MONGO_DB_NAME,
+        auth: {
+          password: process.env.MONGO_PASSWORD,
+          username: process.env.MONGO_USER,
+        },
+      }),
     JwtModule.register({
       global: true,
       secret: jwtConstants.secret,
@@ -26,8 +32,9 @@ import { jwtConstants } from './auth/constants';
     CatsModule,
     AuthModule,
     UsersModule,
+    DirectoriesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule { }

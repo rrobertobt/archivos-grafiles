@@ -1,13 +1,10 @@
 // 0. Conexión a la base de datos
 import { MongoClient } from 'mongodb';
 import { hashSync } from 'bcrypt';
-const uri = 'mongodb://localhost:27017'; // URL de conexión a MongoDB
-const client = new MongoClient(uri, {
-  auth: {
-    password: 'example',
-    username: 'root',
-  },
-});
+import * as dotenv from 'dotenv';
+dotenv.config();
+
+const client = new MongoClient(`mongodb://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@${process.env.MONGO_HOST}:${process.env.MONGO_PORT}`);
 
 export async function mainSeeder() {
   await client.connect();
@@ -50,27 +47,31 @@ export async function mainSeeder() {
   });
   console.log('Usuario creado con ID:', resultAdmin.insertedId);
 
+
+
   // 3. Crear el Directorio Raíz del Usuario
-  const directoriesCollection = db.collection('directories');
+  const directoriesCollection = db.collection('archives');
   const rootDir = await directoriesCollection.insertOne({
-    name: 'Raíz',
-    owner: resultUser.insertedId,
+    name: 'Raiz',
+    type: 'directory',
     parent_directory: null, // Directorio raíz no tiene padre
+    path: '/root',
+    owner: resultUser.insertedId,
     created_at: new Date(),
-    is_shared: false,
-    files: [],
-    subdirectories: [],
+    shared: false,
+    subarchives: [],
   });
   console.log('Directorio raíz creado con ID:', rootDir.insertedId);
 
   const rootDirAdmin = await directoriesCollection.insertOne({
     name: 'Raíz',
-    owner: resultAdmin.insertedId,
+    type: 'directory',
     parent_directory: null, // Directorio raíz no tiene padre
+    path: '/root',
+    owner: resultAdmin.insertedId,
     created_at: new Date(),
-    is_shared: false,
-    files: [],
-    subdirectories: [],
+    shared: false,
+    subarchives: [],
   });
   console.log('Directorio raíz creado con ID:', rootDirAdmin.insertedId);
 

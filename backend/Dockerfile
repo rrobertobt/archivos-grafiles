@@ -10,7 +10,7 @@ ENV NODE_ENV=production
 RUN corepack enable
 
 # Copy project files
-COPY . /app
+COPY ./ /app
 WORKDIR /app
 
 # Install dependencies
@@ -22,6 +22,6 @@ RUN pnpm i -g @nestjs/cli
 # Build project
 RUN pnpm build
 
-# Expose and run Nuxt 3 application
+# Expose and run NestJS server
 EXPOSE 8000
 CMD ["node", "dist/main"]

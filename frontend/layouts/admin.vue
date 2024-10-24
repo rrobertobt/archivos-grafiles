@@ -151,6 +151,11 @@
   const drawerOpen = ref(false);
 
   const sidebarItems = ref([
+  {
+      label: "Mis archivos",
+      icon: "lucide:hard-drive",
+      to: "/admin/files",
+    },
     {
       label: "Papelera",
       icon: "lucide:trash",

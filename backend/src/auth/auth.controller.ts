@@ -11,9 +11,9 @@ import {
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
-import { Response } from 'express';
 import { AuthGuard } from './auth.guard';
 import { UpdatePasswordDto } from './dto/update-password.dto';
+import { Response } from 'express';
 
 @Controller('auth')
 export class AuthController {

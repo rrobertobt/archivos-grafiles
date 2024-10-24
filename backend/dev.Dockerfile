@@ -1,5 +1,5 @@
 # Use slim node image as base
-FROM node:20.0
+FROM node:20-slim
 
 # Set enviroment variables
 ENV PNPM_HOME="/pnpm"
@@ -9,15 +9,15 @@ ENV PATH="$PNPM_HOME:$PATH"
 RUN corepack enable
 
 # Copy project files
-COPY . /app
+COPY ./ /app
 WORKDIR /app
 
 # Install dependencies
 RUN pnpm install
 
-# Build project
-# RUN pnpm build
+# Install nest cli globally
+RUN pnpm i -g @nestjs/cli
 
-# Expose and run Nuxt 3 application
-EXPOSE 3000
+# Expose and run NestJS server
+EXPOSE 8000
 CMD ["pnpm", "dev"]

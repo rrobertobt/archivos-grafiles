@@ -44,7 +44,7 @@ export const useSessionStore = defineStore('session', () => {
       toast.add({
         severity: 'error',
         summary: 'Sesión',
-        detail: error.data.message ?? error.name,
+        detail: error.data?.message ?? error.name,
         life: 3000
       })
       return {
