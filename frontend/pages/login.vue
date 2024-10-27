@@ -10,6 +10,15 @@
   <button
   class="block"
   @click="()=>{
+    credentials.username = 'empleado2'
+    credentials.password = 'empleado2password'
+  }"
+  >
+    set test data employee 2
+  </button>
+  <button
+  class="block"
+  @click="()=>{
     credentials.username = 'admin'
     credentials.password = 'adminpassword'
   }"

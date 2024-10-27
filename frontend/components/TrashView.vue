@@ -5,7 +5,7 @@
       'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4' : subarchives.length > 0,
     }"
   >
-  <Message v-if="subarchives.length === 0" severity="info" icon="pi pi-info-circle" class="!w-full">
+  <Message v-show="subarchives.length === 0" severity="info" icon="pi pi-info-circle">
     Esta carpeta está vacía
   </Message>
     <Card
