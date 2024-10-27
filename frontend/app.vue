@@ -6,7 +6,7 @@
       <slot />
     </NuxtLayout>
     <Toast
-      position="top-center"
+      position="top-right"
       :pt="{ detail: { class: '!text-xs' }, summary: { class: '!text-sm !font-semibold' } }"
     />
   </div>

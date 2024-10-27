@@ -5,7 +5,7 @@ import { File } from "./file.entity";
 
 export type ArchiveDocument = HydratedDocument<Archive>;
 
-@Schema({ collection: 'archives' })
+@Schema({ collection: "archives" })
 export class Archive {
   @Prop()
   name: string;
@@ -16,10 +16,10 @@ export class Archive {
   @Prop()
   mime_type: string;
 
-  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Archive' })
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: "Archive" })
   parent_directory: Archive;
 
-  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User' })
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: "User" })
   owner: User;
 
   @Prop()
@@ -34,10 +34,13 @@ export class Archive {
   @Prop()
   shared: boolean;
 
-  @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Archive' }], default: [] })
+  @Prop({
+    type: [{ type: mongoose.Schema.Types.ObjectId, ref: "Archive" }],
+    default: [],
+  })
   subarchives: Archive[];
 
-  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'File' })
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: "File" })
   file: File;
 }
 

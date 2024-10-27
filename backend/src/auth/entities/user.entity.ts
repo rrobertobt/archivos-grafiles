@@ -1,5 +1,6 @@
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { HydratedDocument } from 'mongoose';
+import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
+import mongoose, { HydratedDocument } from "mongoose";
+import { Archive } from "src/directories/entities/directory.entity";
 
 export type UserDocument = HydratedDocument<User>;
 
@@ -12,7 +13,7 @@ export class User {
   password: string;
 
   @Prop()
-  role: 'admin' | 'employee';
+  role: "admin" | "employee";
 
   @Prop()
   name: string;
@@ -20,8 +21,8 @@ export class User {
   @Prop()
   created_at: Date;
 
-  // @Prop()
-  // root_directory: string;
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: "Archive" })
+  root_directory: Archive;
 
   // @Prop()
   // shared_directory: string;

@@ -1,13 +1,25 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req, UploadedFile, UseInterceptors } from '@nestjs/common';
-import { DirectoriesService } from './directories.service';
-import { UpdateArchiveDto } from './dto/update-directory.dto';
-import { AuthGuard } from 'src/auth/auth.guard';
-import { CreateArchiveDto } from './dto/create-directory.dto';
-import { FileInterceptor } from '@nestjs/platform-express';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  UseGuards,
+  Req,
+  UploadedFile,
+  UseInterceptors,
+} from "@nestjs/common";
+import { DirectoriesService } from "./directories.service";
+import { UpdateArchiveDto } from "./dto/update-directory.dto";
+import { AuthGuard } from "src/auth/auth.guard";
+import { CreateArchiveDto } from "./dto/create-directory.dto";
+import { FileInterceptor } from "@nestjs/platform-express";
 
-@Controller('directories')
+@Controller("directories")
 export class DirectoriesController {
-  constructor(private readonly directoriesService: DirectoriesService) { }
+  constructor(private readonly directoriesService: DirectoriesService) {}
 
   @UseGuards(AuthGuard)
   @Post()
@@ -15,50 +27,71 @@ export class DirectoriesController {
     return this.directoriesService.create(createArchiveDto, req.user.sub);
   }
 
-  @UseInterceptors(FileInterceptor('file'))
+  @UseInterceptors(FileInterceptor("file"))
   @UseGuards(AuthGuard)
-  @Post(':id/files')
-  upload(@Req() req, @UploadedFile() file: Express.Multer.File, @Param('id') folderId: string) {
+  @Post(":id/files")
+  upload(
+    @Req() req,
+    @UploadedFile() file: Express.Multer.File,
+    @Param("id") folderId: string,
+  ) {
     return this.directoriesService.upload(req.user.sub, folderId, file);
   }
 
   @UseGuards(AuthGuard)
-  @Get()
-  findAll(@Req() req) {
-    return this.directoriesService.findAll();
+  @Get(["folders", "folders/:id"])
+  findOnlyDirectories(@Req() req, @Param("id") id: string) {
+    return this.directoriesService.findOnlyFolders(req.user.sub, id);
   }
 
   @UseGuards(AuthGuard)
-  @Get('trash')
+  @Get("trash")
   findAllTrash(@Req() req) {
     return this.directoriesService.findAllTrash(req.user.sub);
   }
 
-  /* 
-  * Route to get all directories of a user
-  */
+  /*
+   * Route to get all directories of a user
+   */
   @UseGuards(AuthGuard)
-  @Get(':id')
-  findOne(@Param('id') id: string, @Req() req) {
+  @Get(":id")
+  findOne(@Param("id") id: string, @Req() req) {
     return this.directoriesService.findOneFromUser(id, req.user.sub);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateArchiveDto: UpdateArchiveDto) {
-    return this.directoriesService.update(+id, updateArchiveDto);
+  // @UseGuards(AuthGuard)
+  // @Patch(":id")
+  // duplicate(@Param("id") id: string, @Req() req) {
+  //   return this.directoriesService.duplicateDirectory(id, req.user.sub);
+  // }
+
+  @UseGuards(AuthGuard)
+  @Patch(":id")
+  update(
+    @Param("id") id: string,
+    @Body() updateArchiveDto: UpdateArchiveDto,
+    @Req() request,
+  ) {
+    return this.directoriesService.update(
+      id,
+      request.user.sub,
+      updateArchiveDto,
+    );
   }
 
   @UseGuards(AuthGuard)
-  @Delete(':id')
-  remove(@Param('id') id: string, @Req() req) {
+  @Delete(":id")
+  remove(@Param("id") id: string, @Req() req) {
     return this.directoriesService.remove(id, req.user.sub);
   }
 
   @UseGuards(AuthGuard)
-  @Delete(':id/files/:fileId')
-  removeFile(@Param('id') id: string, 
-              @Param('fileId') fileId: string,
-  @Req() req) {
-    return this.directoriesService.removeFile(id,fileId, req.user.sub);
+  @Delete(":id/files/:fileId")
+  removeFile(
+    @Param("id") id: string,
+    @Param("fileId") fileId: string,
+    @Req() req,
+  ) {
+    return this.directoriesService.removeFile(id, fileId, req.user.sub);
   }
 }

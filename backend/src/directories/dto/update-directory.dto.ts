@@ -1,4 +1,15 @@
-import { PartialType } from '@nestjs/mapped-types';
-import { CreateArchiveDto } from './create-directory.dto';
+import { IntersectionType } from "@nestjs/mapped-types";
+import { IsNotEmpty, IsIn } from "class-validator";
 
-export class UpdateArchiveDto extends PartialType(CreateArchiveDto) {}
+type UpdateArchiveAction = "duplicate" | "move";
+
+export class MoveArchiveDto {
+  @IsNotEmpty()
+  new_parent_id: string;
+}
+
+export class UpdateArchiveDto extends IntersectionType(MoveArchiveDto) {
+  @IsNotEmpty()
+  @IsIn(["duplicate", "move"])
+  action: UpdateArchiveAction;
+}

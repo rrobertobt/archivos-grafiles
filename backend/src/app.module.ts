@@ -8,6 +8,7 @@ import { UsersModule } from './users/users.module';
 import { JwtModule } from '@nestjs/jwt';
 import { jwtConstants } from './auth/constants';
 import { DirectoriesModule } from './directories/directories.module';
+import { FilesModule } from './files/files.module';
 import * as dotenv from 'dotenv';
 
 dotenv.config();
@@ -33,6 +34,7 @@ dotenv.config();
     AuthModule,
     UsersModule,
     DirectoriesModule,
+    FilesModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -87,7 +87,7 @@
                     :type="showPassword ? 'text' : 'password'"
                     class="!w-full !border-r-1 !rounded-tr-none !rounded-br-none !text-sm"
                     :disabled="!enableEditPassword"
-                    id="passwordConfirmation"
+                    id="password"
                     v-model="newCredentials.password"
                     variant="outlined"
                   />

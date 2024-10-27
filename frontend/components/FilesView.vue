@@ -7,15 +7,14 @@
     }"
   >
     <Message
-      v-if="subarchives.length === 0"
+      v-show="subarchives.length === 0"
       severity="info"
       icon="pi pi-info-circle"
-      class="!w-full"
     >
       Esta carpeta está vacía
     </Message>
     <Card
-      pt:root:class="hover:bg-primary/5 !shadow-none border-2 border-primary/10 hover:shadow-md transition-all !select-none"
+      pt:root:class="hover:bg-primary/5 !shadow-none border-2 border-primary/10 hover:shadow-md transition-all !select-non"
       v-for="archive in subarchives"
       @dblclick="
         navigateTo(
@@ -38,12 +37,15 @@
                 ? 'lucide:folder-open'
                 : 'lucide:file-text'
             "
-            class="text-primary-400 select-none"
+            class="text-primary-400"
             size="42"
           />
-          <h6 class="select-none">{{ archive.name }}</h6>
-          <span class="text-xs text-muted-color-emphasis select-none font-mono" v-if="archive.type === 'file'">
-            {{ archive.mime_type ?? '' }}
+          <h6 class="">{{ archive.name }}</h6>
+          <span
+            class="text-xs text-muted-color-emphasis font-mono"
+            v-if="archive.type === 'file'"
+          >
+            {{ archive.mime_type ?? "" }}
           </span>
         </div>
       </template>
@@ -82,11 +84,17 @@
         </div>
       </div>
     </Dialog>
+
+    <MoveArchiveDialog
+      v-model:visible="moveVisible"
+      @submit="handleMoveArchive($event)"
+    />
   </div>
 </template>
 <script setup>
   const { loading } = storeToRefs(useDirectoriesStore());
-  const { deleteDirectory, deleteFile } = useDirectoriesStore();
+  const { deleteDirectory, deleteFile, duplicateArchive, moveArchive } =
+    useDirectoriesStore();
   const { currentDirectory } = defineProps({
     subarchives: {
       type: Array,
@@ -109,11 +117,24 @@
   const selectedDirectory = ref(null);
   const selectedType = ref(null);
 
+  // Dialogs visibility
   const visible = ref(false);
+  const moveVisible = ref(false);
 
   const menu = ref();
   const items = ref([
-    { label: "Duplicar", icon: "pi pi-copy" },
+    {
+      label: "Mover",
+      icon: "pi pi-arrow-right",
+      command: () => {
+        moveVisible.value = true;
+      },
+    },
+    {
+      label: "Duplicar",
+      icon: "pi pi-copy",
+      command: () => handleDuplicateArchive(),
+    },
     {
       label: "Eliminar",
       icon: "pi pi-trash",
@@ -139,6 +160,24 @@
       emit("deleted");
     }
     visible.value = false;
+  };
+
+  const handleDuplicateArchive = async () => {
+    await duplicateArchive({
+      archiveId: selectedDirectory.value,
+      type: selectedType.value,
+    });
+    emit("deleted");
+  };
+
+  const handleMoveArchive = async (newParentId) => {
+    console.log(newParentId);
+    await moveArchive({
+      archiveId: selectedDirectory.value,
+      type: selectedType.value,
+      directoryId: newParentId,
+    });
+    emit("deleted");
   };
 </script>
 <style scoped></style>

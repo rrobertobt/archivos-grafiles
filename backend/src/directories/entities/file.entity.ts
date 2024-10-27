@@ -3,7 +3,7 @@ import { HydratedDocument } from "mongoose";
 
 export type FileDocument = HydratedDocument<File>;
 
-@Schema({ collection: 'uploads.files' })
+@Schema({ collection: "uploads.files" })
 export class File {
   @Prop()
   length: number;
