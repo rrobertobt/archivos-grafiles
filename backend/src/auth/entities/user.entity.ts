@@ -18,14 +18,14 @@ export class User {
   @Prop()
   name: string;
 
-  @Prop()
+  @Prop({ default: new Date() })
   created_at: Date;
 
-  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: "Archive" })
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: "Archive", default: null })
   root_directory: Archive;
 
-  // @Prop()
-  // shared_directory: string;
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: "Archive", default: null })
+  shared_directory: Archive;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

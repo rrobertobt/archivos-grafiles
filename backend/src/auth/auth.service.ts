@@ -1,9 +1,9 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { compare } from 'bcrypt';
-import { UsersService } from 'src/users/users.service';
-import { LoginDto } from './dto/login.dto';
-import { JwtService } from '@nestjs/jwt';
-import { UpdatePasswordDto } from './dto/update-password.dto';
+import { Injectable, UnauthorizedException } from "@nestjs/common";
+import { compare } from "bcrypt";
+import { UsersService } from "src/users/users.service";
+import { LoginDto } from "./dto/login.dto";
+import { JwtService } from "@nestjs/jwt";
+import { UpdatePasswordDto } from "./dto/update-password.dto";
 
 @Injectable()
 export class AuthService {
@@ -11,7 +11,7 @@ export class AuthService {
     const { password } = passwordDto;
     const user = await this.usersService.findById(userId);
     if (!user) {
-      throw new UnauthorizedException('Usuario inexistente o inválido');
+      throw new UnauthorizedException("Usuario inexistente o inválido");
     }
     await this.usersService.updatePassword(userId, password);
   }
@@ -27,7 +27,7 @@ export class AuthService {
       !user ||
       !(await this.validateUserCredentials(password, user.password))
     ) {
-      throw new UnauthorizedException('Credenciales inválidas');
+      throw new UnauthorizedException("Credenciales inválidas");
     }
 
     const payload = { username: user.username, sub: user.id };

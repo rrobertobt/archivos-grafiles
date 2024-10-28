@@ -11,7 +11,7 @@
       severity="info"
       icon="pi pi-info-circle"
     >
-      Esta carpeta está vacía
+      {{ emptyMessage }}
     </Message>
     <Card
       pt:root:class="hover:bg-primary/5 !shadow-none border-2 border-primary/10 hover:shadow-md transition-all !select-non"
@@ -89,9 +89,13 @@
       v-model:visible="moveVisible"
       @submit="handleMoveArchive($event)"
     />
+
+    <ShareFileDialog v-model:visible="shareVisible" :selected-id="selectedDirectory"/>
   </div>
 </template>
 <script setup>
+import ShareFileDialog from './ShareFileDialog.vue';
+
   const { loading } = storeToRefs(useDirectoriesStore());
   const { deleteDirectory, deleteFile, duplicateArchive, moveArchive } =
     useDirectoriesStore();
@@ -109,6 +113,10 @@
       type: String,
       required: true,
     },
+    emptyMessage: {
+      type: String,
+      default: "Esta carpeta está vacía",
+    },
   });
 
   const emit = defineEmits(["deleted"]);
@@ -120,11 +128,12 @@
   // Dialogs visibility
   const visible = ref(false);
   const moveVisible = ref(false);
+  const shareVisible = ref(false);
 
   const menu = ref();
   const items = ref([
     {
-      label: "Mover",
+      label: "Mover...",
       icon: "pi pi-arrow-right",
       command: () => {
         moveVisible.value = true;
@@ -136,7 +145,14 @@
       command: () => handleDuplicateArchive(),
     },
     {
-      label: "Eliminar",
+      label: "Compartir con...",
+      icon: "pi pi-share-alt",
+      command: () => {
+        shareVisible.value = true;
+      },
+    },
+    {
+      label: "Eliminar...",
       icon: "pi pi-trash",
       command: () => {
         visible.value = true;
@@ -149,6 +165,7 @@
     selected.value = id;
     selectedDirectory.value = id;
     selectedType.value = type;
+    items.value[2].disabled = type === "directory";
   };
 
   const handleDeleteDirectory = async () => {
@@ -172,12 +189,15 @@
 
   const handleMoveArchive = async (newParentId) => {
     console.log(newParentId);
-    await moveArchive({
+    const response = await moveArchive({
       archiveId: selectedDirectory.value,
       type: selectedType.value,
       directoryId: newParentId,
     });
-    emit("deleted");
+    if (!response.error) {
+      emit("deleted");
+      moveVisible.value = false;
+    }
   };
 </script>
 <style scoped></style>

@@ -1,5 +1,8 @@
 <template>
-  <div class="w-full" v-if="data.results">
+  <Message v-show="!data?.results" severity="error" icon="pi pi-exclamation-triangle" class="w-full h-min">
+    No se encontró la carpeta
+  </Message>
+  <div class="w-full" v-if="data?.results">
     <div class="flex gap-x-2">
       <FolderDialog :parent-directory-id="route.params.folderId" @saved="refresh"/>
       <FileUploadDialog :parent-directory-id="route.params.folderId" @saved="refresh"/>
@@ -19,6 +22,8 @@ import FileUploadDialog from '~/components/FileUploadDialog.vue';
   } = await useAsyncData(() => {
     return $api(`/directories/${route.params.folderId}`);
   });
+
+  console.log(data);
 
   definePageMeta({
     layout: "employee",

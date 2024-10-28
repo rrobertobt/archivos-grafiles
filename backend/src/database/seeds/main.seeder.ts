@@ -72,8 +72,23 @@ export async function mainSeeder() {
     shared: false,
     in_trash: false,
     subarchives: [],
+    shared_by: null,
   });
   console.log("Directorio raíz creado con ID:", rootDir.insertedId);
+
+  const sharedDir = await directoriesCollection.insertOne({
+    name: "Compartido",
+    type: "directory",
+    parent_directory: null,
+    path: "/shared",
+    owner: resultUser.insertedId,
+    created_at: new Date(),
+    shared: true,
+    in_trash: false,
+    subarchives: [],
+    shared_by: null,
+  });
+  console.log("Directorio compartido creado con ID:", sharedDir.insertedId);
 
   const rootDir2 = await directoriesCollection.insertOne({
     name: "Raíz",
@@ -85,8 +100,23 @@ export async function mainSeeder() {
     shared: false,
     in_trash: false,
     subarchives: [],
+    shared_by: null,
   });
   console.log("Directorio raíz creado con ID:", rootDir2.insertedId);
+
+  const sharedDir2 = await directoriesCollection.insertOne({
+    name: "Compartido",
+    type: "directory",
+    parent_directory: null,
+    path: "/shared",
+    owner: resultUser2.insertedId,
+    created_at: new Date(),
+    shared: true,
+    in_trash: false,
+    subarchives: [],
+    shared_by: null,
+  });
+  console.log("Directorio compartido creado con ID:", sharedDir2.insertedId);
 
   const rootDirAdmin = await directoriesCollection.insertOne({
     name: "Raíz",
@@ -98,8 +128,26 @@ export async function mainSeeder() {
     shared: false,
     in_trash: false,
     subarchives: [],
+    shared_by: null,
   });
   console.log("Directorio raíz creado con ID:", rootDirAdmin.insertedId);
+
+  const sharedDirAdmin = await directoriesCollection.insertOne({
+    name: "Compartido",
+    type: "directory",
+    parent_directory: null,
+    path: "/shared",
+    owner: resultAdmin.insertedId,
+    created_at: new Date(),
+    shared: true,
+    in_trash: false,
+    subarchives: [],
+    shared_by: null,
+  });
+  console.log(
+    "Directorio compartido creado con ID:",
+    sharedDirAdmin.insertedId,
+  );
 
   // 4. Actualizar el campo root_directory del usuario
   await usersCollection.updateOne(
@@ -109,16 +157,34 @@ export async function mainSeeder() {
   console.log("Directorio raíz asignado al usuario.");
 
   await usersCollection.updateOne(
+    { _id: resultUser.insertedId },
+    { $set: { shared_directory: sharedDir.insertedId } },
+  );
+  console.log("Directorio compartido asignado al usuario.");
+
+  await usersCollection.updateOne(
     { _id: resultUser2.insertedId },
     { $set: { root_directory: rootDir2.insertedId } },
   );
   console.log("Directorio raíz asignado al usuario.");
 
   await usersCollection.updateOne(
+    { _id: resultUser2.insertedId },
+    { $set: { shared_directory: sharedDir2.insertedId } },
+  );
+  console.log("Directorio compartido asignado al usuario.");
+
+  await usersCollection.updateOne(
     { _id: resultAdmin.insertedId },
     { $set: { root_directory: rootDirAdmin.insertedId } },
   );
   console.log("Directorio raíz asignado al usuario admin.");
+
+  await usersCollection.updateOne(
+    { _id: resultAdmin.insertedId },
+    { $set: { shared_directory: sharedDirAdmin.insertedId } },
+  );
+  console.log("Directorio compartido asignado al usuario admin.");
 
   await client.close();
 }

@@ -31,7 +31,7 @@ export class Archive {
   @Prop({ default: new Date() })
   created_at: Date;
 
-  @Prop()
+  @Prop({ default: false })
   shared: boolean;
 
   @Prop({
@@ -42,6 +42,12 @@ export class Archive {
 
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: "File" })
   file: File;
+
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: "User" })
+  shared_by: User;
+
+  @Prop()
+  shared_at: Date;
 }
 
 export const ArchiveSchema = SchemaFactory.createForClass(Archive);

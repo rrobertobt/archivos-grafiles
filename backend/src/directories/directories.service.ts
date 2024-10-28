@@ -191,6 +191,7 @@ export class DirectoriesService {
   }
 
   async findOneFromUser(folderId: string, userId: string) {
+    console.log({ folderId, userId });
     const user = await this.usersService.findById(userId);
     if (!user) {
       throw new NotFoundException("Usuario no encontrado");
@@ -204,6 +205,10 @@ export class DirectoriesService {
       .populate({
         path: "subarchives",
         match: { in_trash: false },
+        populate: {
+          path: "shared_by",
+          select: ["username", "name"],
+        },
       });
     if (!directory) {
       throw new NotFoundException("Directorio no encontrado");

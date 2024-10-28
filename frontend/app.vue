@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- <Button label="Toggle Dark Mode" size="small" @click="toggleDarkMode()" /> -->
-    <NuxtLoadingIndicator :height="2" color="var(--p-primary-color)" />
+    <NuxtLoadingIndicator :height="3" color="var(--p-primary-color)" :throttle="20" />
     <NuxtLayout>
       <slot />
     </NuxtLayout>

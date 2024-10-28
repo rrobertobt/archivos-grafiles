@@ -19,6 +19,7 @@
           />
         </div>
       </template>
+      <h4 class="text-lg my-2 font-semibold select-none">Administración</h4>
       <Menu
         :model="[
           {
@@ -26,6 +27,12 @@
             icon: 'lucide:house',
             to: '/admin',
           },
+          {
+            label: 'Usuarios',
+            icon: 'lucide:users',
+            to: '/admin/users',
+          },
+          { label: 'Perfil', icon: 'lucide:user-pen', to: '/admin/profile' },
         ]"
         class="!border-none !bg-transparent"
       >
@@ -102,6 +109,8 @@
     <Divider pt:root:class="!mt-0" />
     <div class="flex gap-x-7 px-16 lg:max-w-screen-2xl mx-auto">
       <div class="w-64 shrink-0 hidden lg:block">
+        <h4 class="text-lg my-2 font-semibold select-none">Administración</h4>
+
         <Menu
           :model="[
             {
@@ -109,6 +118,12 @@
               icon: 'lucide:house',
               to: '/admin',
             },
+            {
+              label: 'Usuarios',
+              icon: 'lucide:users',
+              to: '/admin/users',
+            },
+            { label: 'Perfil', icon: 'lucide:user-pen', to: '/admin/profile' },
           ]"
           class="!border-none !bg-transparent"
         >
@@ -151,7 +166,7 @@
   const drawerOpen = ref(false);
 
   const sidebarItems = ref([
-  {
+    {
       label: "Mis archivos",
       icon: "lucide:hard-drive",
       to: "/admin/files",
@@ -160,11 +175,6 @@
       label: "Papelera",
       icon: "lucide:trash",
       to: "/admin/trash",
-    },
-    {
-      label: "Perfil",
-      icon: "lucide:user-pen",
-      to: "/admin/profile",
     },
   ]);
 

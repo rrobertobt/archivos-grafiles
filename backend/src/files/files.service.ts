@@ -1,6 +1,10 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { CreateFileDto } from "./dto/create-file.dto";
-import { MoveFileDto, UpdateFileDto } from "./dto/update-file.dto";
+import {
+  MoveFileDto,
+  ShareFileDto,
+  UpdateFileDto,
+} from "./dto/update-file.dto";
 import { InjectConnection, InjectModel } from "@nestjs/mongoose";
 import { GridFSBucket } from "mongodb";
 import { Connection, Model } from "mongoose";
@@ -56,6 +60,8 @@ export class FilesService {
         return await this.duplicateFile(fileId);
       case "move":
         return await this.moveFile(file, updateFileDto);
+      case "share":
+        return await this.shareFile(file, updateFileDto);
       default:
         throw new NotFoundException("Acción no encontrada");
     }
@@ -68,6 +74,8 @@ export class FilesService {
   private async moveFile(file: ArchiveDocument, moveFileDto: MoveFileDto) {
     const newParent = await this.archiveModel.findOne({
       _id: moveFileDto.new_parent_id,
+      type: "directory",
+      shared: false,
     });
 
     if (!newParent) {
@@ -140,5 +148,44 @@ export class FilesService {
     parent_directory.subarchives.push(newFile);
     await parent_directory.save();
     return newFile;
+  }
+  private async shareFile(file: ArchiveDocument, shareFileDto: ShareFileDto) {
+    const user = await this.usersService.findByUsername(shareFileDto.username);
+
+    if (!user) {
+      throw new NotFoundException("Usuario a compartir no encontrado");
+    }
+
+    const sharedFile = await this.archiveModel.create({
+      name: file.name,
+      owner: user._id,
+      file: file.file,
+      mime_type: file.mime_type,
+      shared: true,
+      in_trash: false,
+      type: file.type,
+      path: `${user.shared_directory.path}/${file.name}`,
+      parent_directory: user.shared_directory,
+      shared_by: file.owner,
+      shared_at: new Date(),
+    });
+
+    await this.archiveModel.updateOne(
+      {
+        _id: user.shared_directory,
+      },
+      {
+        $push: {
+          subarchives: sharedFile,
+        },
+      },
+    );
+
+    const gridFsFile = file.file as FileDocument;
+    const fileReadStream = this.fileBucket.openDownloadStream(gridFsFile._id);
+    const uploadStream = this.fileBucket.openUploadStream(sharedFile.name);
+    fileReadStream.pipe(uploadStream);
+
+    return sharedFile;
   }
 }
