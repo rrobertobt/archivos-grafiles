@@ -45,7 +45,6 @@ export class FilesService {
     const file = await this.archiveModel.findOne({
       _id: fileId,
     });
-    console.log(fileId);
     const fileDocument = await this.fileModel.findOne({
       _id: file.file,
     });

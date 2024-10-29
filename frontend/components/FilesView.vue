@@ -202,7 +202,6 @@
   };
 
   const handleMoveArchive = async (newParentId) => {
-    console.log(newParentId);
     const response = await moveArchive({
       archiveId: selectedDirectory.value,
       type: selectedType.value,

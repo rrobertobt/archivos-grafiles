@@ -23,8 +23,6 @@ import FileUploadDialog from '~/components/FileUploadDialog.vue';
     return $api(`/directories/${route.params.folderId}`);
   });
 
-  console.log(data);
-
   definePageMeta({
     layout: "employee",
   });

@@ -28,7 +28,6 @@ export class DirectoriesService {
   }
 
   async upload(userId: string, folderId: string, file: Express.Multer.File) {
-    console.log({ userId, folderId, file });
     if (!file) {
       throw new BadRequestException("Archivo a subir no encontrado");
     }

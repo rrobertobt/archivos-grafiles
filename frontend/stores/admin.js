@@ -47,7 +47,6 @@ export const useAdminStore = defineStore('admin',() => {
   }
 
   async function createEmployee(payload) {
-    console.log(payload)
     loading.value = true
     try {
       const response = await $api('/users', {

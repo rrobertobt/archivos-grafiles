@@ -94,7 +94,13 @@ export const useSessionStore = defineStore('session', () => {
       session.value = response
       return response
     } catch (error) {
-      console.log(error)
+      toast.add({
+        severity: 'error',
+        summary: 'Sesión',
+        detail: 'No se pudo recuperar la sesión. Intenta iniciar sesión nuevamente',
+        life: 3000
+      })
+
       return {
         error: error.data?.message ?? error.name
       }
