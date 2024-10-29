@@ -6,7 +6,7 @@
     }"
   >
   <Message v-show="subarchives.length === 0" severity="info" icon="pi pi-info-circle">
-    Esta carpeta está vacía
+    No hay archivos en la papelera
   </Message>
     <Card
       pt:root:class="hover:bg-primary/5 !shadow-none border-2 border-primary/10 hover:shadow-md transition-all !select-none"

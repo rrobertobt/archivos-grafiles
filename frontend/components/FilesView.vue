@@ -32,11 +32,7 @@
       <template #content>
         <div class="flex flex-col items-center gap-y-2">
           <Icon
-            :name="
-              archive.type === 'directory'
-                ? 'lucide:folder-open'
-                : 'lucide:file-text'
-            "
+            :name="getArchiveIcon(archive)"
             class="text-primary-400"
             size="42"
           />
@@ -90,11 +86,29 @@
       @submit="handleMoveArchive($event)"
     />
 
-    <ShareFileDialog v-model:visible="shareVisible" :selected-id="selectedDirectory"/>
+    <ShareFileDialog
+      v-model:visible="shareVisible"
+      :selected-id="selectedDirectory"
+    />
   </div>
 </template>
 <script setup>
-import ShareFileDialog from './ShareFileDialog.vue';
+  import ShareFileDialog from "./ShareFileDialog.vue";
+
+  const getArchiveIcon = (archive) => {
+    switch (archive.type) {
+      case "directory":
+        return "lucide:folder-open";
+      case "file":
+        if (archive.mime_type.includes("image")) {
+          return "lucide:file-image";
+        } else if (archive.mime_type.includes("html")) {
+          return "lucide:file-code-2";
+        } else {
+          return "lucide:file-text";
+        }
+    }
+  }
 
   const { loading } = storeToRefs(useDirectoriesStore());
   const { deleteDirectory, deleteFile, duplicateArchive, moveArchive } =

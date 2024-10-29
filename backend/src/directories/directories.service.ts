@@ -28,6 +28,7 @@ export class DirectoriesService {
   }
 
   async upload(userId: string, folderId: string, file: Express.Multer.File) {
+    console.log({ userId, folderId, file });
     if (!file) {
       throw new BadRequestException("Archivo a subir no encontrado");
     }
@@ -191,7 +192,6 @@ export class DirectoriesService {
   }
 
   async findOneFromUser(folderId: string, userId: string) {
-    console.log({ folderId, userId });
     const user = await this.usersService.findById(userId);
     if (!user) {
       throw new NotFoundException("Usuario no encontrado");
@@ -309,7 +309,6 @@ export class DirectoriesService {
   }
 
   async remove(id: string, userId: string) {
-    console.log({ id, userId });
     const user = await this.usersService.findById(userId);
     if (!user) {
       throw new NotFoundException("Usuario no encontrado");

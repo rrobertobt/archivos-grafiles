@@ -10,7 +10,7 @@ const client = new MongoClient(
 
 export async function mainSeeder() {
   await client.connect();
-  const db = client.db("testdb");
+  const db = client.db(process.env.MONGO_DB_NAME);
 
   // 1. Comprobar si la colección de usuarios está vacía
   const users = db.collection("users");

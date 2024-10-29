@@ -108,7 +108,9 @@ export class UsersService {
   }
 
   async findById(id: string) {
-    return await this.userModel.findById(id).populate("shared_directory");
+    return await this.userModel
+      .findById(id)
+      .populate(["shared_directory", "root_directory"]);
   }
 
   private async encryptPassword(password: string) {

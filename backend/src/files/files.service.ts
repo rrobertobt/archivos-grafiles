@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
+import { Injectable, NotFoundException, Res } from "@nestjs/common";
 import { CreateFileDto } from "./dto/create-file.dto";
 import {
   MoveFileDto,
@@ -6,7 +6,7 @@ import {
   UpdateFileDto,
 } from "./dto/update-file.dto";
 import { InjectConnection, InjectModel } from "@nestjs/mongoose";
-import { GridFSBucket } from "mongodb";
+import { GridFSBucket, ObjectId } from "mongodb";
 import { Connection, Model } from "mongoose";
 import { UsersService } from "src/users/users.service";
 import { FileDocument } from "src/directories/entities/file.entity";
@@ -14,6 +14,7 @@ import {
   Archive,
   ArchiveDocument,
 } from "src/directories/entities/directory.entity";
+import { Response } from "express";
 
 @Injectable()
 export class FilesService {
@@ -36,8 +37,67 @@ export class FilesService {
     return `This action returns all files`;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} file`;
+  async findOne(fileId: string, userId: string) {
+    // since this backend only accepts, plain text (txt and html) and imaages (png, jpg, jpeg),
+    // we can safely assume that the file is an image or a text file
+    // and return the file as a stream
+    // return this.fileBucket.openDownloadStream(new ObjectId(fileId));
+    const file = await this.archiveModel.findOne({
+      _id: fileId,
+    });
+    console.log(fileId);
+    const fileDocument = await this.fileModel.findOne({
+      _id: file.file,
+    });
+
+    // if the file is an image, we can return the image as base64
+    const fileStream = this.fileBucket.openDownloadStream(fileDocument._id);
+    if (file.mime_type.includes("image")) {
+      return new Promise((resolve, reject) => {
+        const chunks: Buffer[] = [];
+
+        fileStream.on("data", (chunk) => {
+          chunks.push(chunk);
+        });
+
+        fileStream.on("end", () => {
+          const buffer = Buffer.concat(chunks);
+          const base64Image = buffer.toString("base64");
+          resolve({
+            file: file,
+            content: `data:${file.mime_type};base64,${base64Image}`,
+          });
+        });
+
+        fileStream.on("error", (error) => {
+          reject(error);
+        });
+      });
+    } else if (file.mime_type.includes("text")) {
+      // if the file is a text file, we can return the text as a string
+      return new Promise((resolve, reject) => {
+        let text = "";
+        fileStream.on("data", (chunk) => {
+          text += chunk.toString();
+        });
+
+        fileStream.on("end", () => {
+          resolve({
+            file: file,
+            content: text,
+          });
+        });
+
+        fileStream.on("error", (error) => {
+          reject(error);
+        });
+      });
+    }
+    return null;
+
+    // const {} = this.fileBucket.openDownloadStream(fileDocument._id).pipe(res);
+
+    // return new Buffer(fileStream.readable);
   }
 
   async update(fileId: string, userId: string, updateFileDto: UpdateFileDto) {

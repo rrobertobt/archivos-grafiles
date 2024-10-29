@@ -8,6 +8,7 @@ import {
   Delete,
   UseGuards,
   Req,
+  Res,
 } from "@nestjs/common";
 import { FilesService } from "./files.service";
 import { CreateFileDto } from "./dto/create-file.dto";
@@ -28,9 +29,10 @@ export class FilesController {
     return this.filesService.findAll();
   }
 
+  @UseGuards(AuthGuard)
   @Get(":id")
-  findOne(@Param("id") id: string) {
-    return this.filesService.findOne(+id);
+  findOne(@Param("id") id: string, @Req() request) {
+    return this.filesService.findOne(id, request.user.sub);
   }
 
   @UseGuards(AuthGuard)

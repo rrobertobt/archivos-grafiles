@@ -18,7 +18,7 @@ import SharedFilesView from '~/components/SharedFilesView.vue';
   );
 
   definePageMeta({
-    layout: "employee",
+    layout: "admin",
   });
 </script>
 <style lang="postcss" scoped></style>

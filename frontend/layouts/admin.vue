@@ -172,6 +172,11 @@
       to: "/admin/files",
     },
     {
+      label: "Compartidos",
+      icon: "lucide:folder-sync",
+      to: "/admin/shared",
+    },
+    {
       label: "Papelera",
       icon: "lucide:trash",
       to: "/admin/trash",

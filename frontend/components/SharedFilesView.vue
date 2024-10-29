@@ -89,7 +89,7 @@
       required: true,
     },
     currentDirectory: {
-      type: String,
+      type: Object,
       required: true,
     },
     emptyMessage: {
