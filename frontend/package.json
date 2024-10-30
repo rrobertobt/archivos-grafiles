@@ -10,6 +10,7 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
+    "@guolao/vue-monaco-editor": "^1.5.4",
     "@nuxt/fonts": "^0.9.2",
     "@nuxt/icon": "^1.5.4",
     "@nuxtjs/tailwindcss": "^6.12.1",
@@ -22,7 +23,9 @@
     "primevue": "^4.1.0",
     "tailwindcss-primeui": "^0.3.4",
     "vue": "latest",
-    "vue-router": "latest"
+    "vue-router": "latest",
+    "@vueuse/core": "^11.1.0",
+    "@vueuse/nuxt": "^11.1.0"
   },
   "devDependencies": {
     "@iconify-json/lucide": "^1.2.7",

@@ -3,9 +3,10 @@
     <h4 class="text-xl my-2 font-semibold text-muted-color-emphasis">
       Crear trabajador
     </h4>
-    <Button class="my-4" :as="NuxtLink" to="/admin/users">
-      <Icon name="lucide:arrow-left" />
-      Cancelar
+    <Button class="my-4" :as="NuxtLink" to="/admin/users" label="Cancelar">
+      <template #icon>
+        <Icon name="lucide:arrow-left" />
+      </template>
     </Button>
     <form class="grid gap-4 grid-cols-1 md:grid-cols-4" @submit.prevent="handleSaveUser">
       <FloatLabel variant="in" class="w-full">

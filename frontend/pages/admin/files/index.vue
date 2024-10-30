@@ -20,7 +20,7 @@ import FileUploadDialog from '~/components/FileUploadDialog.vue';
     data,
     refresh
   } = await useAsyncData(() => {
-    return $api(`/directories/${root_directory}`);
+    return $api(`/directories/${root_directory._id}`);
   });
 
   definePageMeta({

@@ -1,7 +1,10 @@
-import { IsEnum, IsIn, IsNotEmpty, IsString } from "class-validator";
+import { Transform, TransformFnParams } from "class-transformer";
+import { IsIn, IsNotEmpty, IsString } from "class-validator";
 
 export class CreateArchiveDto {
-  @IsNotEmpty({message: "El nombre es requerido"})
+  @IsNotEmpty({ message: "El nombre es requerido" })
+  @IsString({ message: "El nombre debe ser un texto" })
+  @Transform(({ value }: TransformFnParams) => value?.trim())
   name: string;
 
   @IsNotEmpty()

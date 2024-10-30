@@ -1,18 +1,27 @@
 <template>
   <div>
     <!-- <Button label="Toggle Dark Mode" size="small" @click="toggleDarkMode()" /> -->
-    <NuxtLoadingIndicator :height="3" color="var(--p-primary-color)" :throttle="20" />
+    <NuxtLoadingIndicator
+      :height="3"
+      color="var(--p-primary-color)"
+      :throttle="20"
+    />
     <NuxtLayout>
       <slot />
     </NuxtLayout>
     <Toast
       position="top-right"
-      :pt="{ detail: { class: '!text-xs' }, summary: { class: '!text-sm !font-semibold' } }"
+      :pt="{
+        detail: { class: '!text-xs' },
+        summary: { class: '!text-sm !font-semibold' },
+      }"
     />
   </div>
 </template>
 <script setup>
+  import { breakpointsTailwind } from "@vueuse/core";
   import Toast from "primevue/toast";
+  // const {smaller} = useBreakpoints(breakpointsTailwind);
 
   function toggleDarkMode() {
     const element = document.querySelector("html");
@@ -43,5 +52,10 @@
   .layout-enter-from {
     opacity: 0;
     transform: translateX(0.5rem);
+  }
+
+  .vue-monaco-editor {
+    height: 100%;
+    font-family: "Geist Mono", "ui-monospace" !important;
   }
 </style>

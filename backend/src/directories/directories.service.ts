@@ -12,7 +12,6 @@ import { UsersService } from "src/users/users.service";
 import { Archive, ArchiveDocument } from "./entities/directory.entity";
 import { GridFSBucket } from "mongodb";
 import { Readable } from "stream";
-import { FileDocument } from "./entities/file.entity";
 
 @Injectable()
 export class DirectoriesService {

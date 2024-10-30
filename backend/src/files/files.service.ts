@@ -1,6 +1,12 @@
-import { Injectable, NotFoundException, Res } from "@nestjs/common";
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+  Res,
+} from "@nestjs/common";
 import { CreateFileDto } from "./dto/create-file.dto";
 import {
+  ContentFileDto,
   MoveFileDto,
   ShareFileDto,
   UpdateFileDto,
@@ -9,12 +15,12 @@ import { InjectConnection, InjectModel } from "@nestjs/mongoose";
 import { GridFSBucket, ObjectId } from "mongodb";
 import { Connection, Model } from "mongoose";
 import { UsersService } from "src/users/users.service";
-import { FileDocument } from "src/directories/entities/file.entity";
+import { File, FileDocument } from "src/directories/entities/file.entity";
 import {
   Archive,
   ArchiveDocument,
 } from "src/directories/entities/directory.entity";
-import { Response } from "express";
+import { UserDocument } from "src/auth/entities/user.entity";
 
 @Injectable()
 export class FilesService {
@@ -38,13 +44,11 @@ export class FilesService {
   }
 
   async findOne(fileId: string, userId: string) {
-    // since this backend only accepts, plain text (txt and html) and imaages (png, jpg, jpeg),
-    // we can safely assume that the file is an image or a text file
-    // and return the file as a stream
-    // return this.fileBucket.openDownloadStream(new ObjectId(fileId));
     const file = await this.archiveModel.findOne({
       _id: fileId,
+      owner: userId,
     });
+    if (!file) throw new NotFoundException("Archivo no existe");
     const fileDocument = await this.fileModel.findOne({
       _id: file.file,
     });
@@ -93,10 +97,6 @@ export class FilesService {
       });
     }
     return null;
-
-    // const {} = this.fileBucket.openDownloadStream(fileDocument._id).pipe(res);
-
-    // return new Buffer(fileStream.readable);
   }
 
   async update(fileId: string, userId: string, updateFileDto: UpdateFileDto) {
@@ -121,6 +121,8 @@ export class FilesService {
         return await this.moveFile(file, updateFileDto);
       case "share":
         return await this.shareFile(file, updateFileDto);
+      case "content":
+        return await this.updatePlainContent(file, updateFileDto);
       default:
         throw new NotFoundException("Acción no encontrada");
     }
@@ -128,6 +130,38 @@ export class FilesService {
 
   remove(id: number) {
     return `This action removes a #${id} file`;
+  }
+
+  private async updatePlainContent(
+    file: ArchiveDocument,
+    contentFileDto: ContentFileDto,
+  ) {
+    // Check if the file is a text file using the mime type
+    if (!file.mime_type.includes("text")) {
+      throw new BadRequestException("El archivo no es un archivo de texto");
+    }
+
+    const fileDocument = await this.fileModel.findOne({
+      _id: file.file,
+    });
+
+    // return fileDocument.filename;
+
+    // Create a new file stream and save the new content
+    const fileStream = this.fileBucket.openUploadStream(fileDocument.filename);
+    fileStream.end(contentFileDto.content);
+
+    // Delete the old file stream
+    await this.fileBucket.delete(fileDocument._id);
+
+    // Update the file reference in the archive
+    await this.archiveModel.updateOne(
+      { _id: file._id },
+      { file: fileStream.id },
+    );
+
+    const owner = file.owner as UserDocument;
+    return await this.findOne(file._id.toString(), owner._id.toString());
   }
 
   private async moveFile(file: ArchiveDocument, moveFileDto: MoveFileDto) {
@@ -213,6 +247,14 @@ export class FilesService {
 
     if (!user) {
       throw new NotFoundException("Usuario a compartir no encontrado");
+    }
+
+    const fileOwner = file.owner as UserDocument;
+
+    if (user._id.toString() === fileOwner._id.toString()) {
+      throw new BadRequestException(
+        "No puedes compartir un archivo contigo mismo",
+      );
     }
 
     const sharedFile = await this.archiveModel.create({

@@ -3,7 +3,7 @@
     <h1 class="text-2xl font-semibold text-color">
       Archivos compartidos conmigo
     </h1>
-    <SharedFilesView class="py-2" role="employee" :subarchives="data.results.subarchives" @deleted="refresh" :current-directory="shared_directory" empty-message="No se han compartido archivos con tu usuario" />
+    <SharedFilesView class="py-2" role="admin" :subarchives="data.results.subarchives" @deleted="refresh" :current-directory="shared_directory" empty-message="No se han compartido archivos con tu usuario" />
   </div>
 </template>
 <script setup>

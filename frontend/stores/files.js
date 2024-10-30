@@ -37,8 +37,45 @@ export const useFilesStore = defineStore('files',() => {
     }
   }
 
+  // this function only for txt and html files
+  async function updatePlainContent({
+    fileId,
+    newContent,
+  }) {
+    loading.value = true
+    try {
+      const response = await $api(`/files/${fileId}`, {
+        method: 'PATCH',
+        body: {
+          action: 'content',
+          content: newContent,
+        }
+      })
+      toast.add({
+        severity: 'success',
+        summary: 'Archivo',
+        detail: 'Contenido actualizado correctamente',
+        life: 3000
+      })
+      return {response, error: null}
+    } catch (error) {
+      toast.add({
+        severity: 'error',
+        summary: 'Archivo',
+        detail: error.data.message ?? error.name,
+        life: 3000
+      })
+      return {
+        error: error.data.message ?? error.name
+      } 
+    } finally {
+      loading.value = false
+    }
+  }
+
   return {
     loading,
     shareFileToUser,
+    updatePlainContent,
   }
 })

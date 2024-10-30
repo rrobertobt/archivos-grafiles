@@ -14,7 +14,7 @@
       {{ emptyMessage }}
     </Message>
     <Card
-      pt:root:class="hover:bg-primary/5 !shadow-none border-2 border-primary/10 hover:shadow-md transition-all !select-non "
+      pt:root:class="hover:bg-primary/5 !shadow-none border-2 border-primary/10 hover:shadow-md transition-all !select-none"
       v-for="archive in subarchives"
       @dblclick="
         navigateTo(
@@ -75,9 +75,44 @@
 
     <ContextMenu ref="menu" :model="items" @hide="selected = null">
     </ContextMenu>
+
+    <Dialog
+      v-model:visible="deleteVisible"
+      modal
+      header="Enviar a la papelera"
+      class="w-10/12 lg:w-3/12"
+    >
+      <div class="flex flex-col gap-4">
+        <p>¿Estás seguro de que deseas enviar a la papelera este elemento?</p>
+
+        <div class="flex justify-between gap-2">
+          <Button
+            fluid
+            type="button"
+            label="Cancelar"
+            :loading="loading"
+            severity="secondary"
+            class="mr-2"
+            @click="deleteVisible = false"
+          />
+          <Button
+            fluid
+            type="button"
+            :loading="loading"
+            label="Eliminar"
+            severity="danger"
+            @click="handleDeleteDirectory"
+          />
+        </div>
+      </div>
+    </Dialog>
   </div>
 </template>
 <script setup>
+  const { loading } = storeToRefs(useDirectoriesStore());
+  const { deleteDirectory, deleteFile, duplicateArchive, moveArchive } =
+    useDirectoriesStore();
+
   const { currentDirectory } = defineProps({
     subarchives: {
       type: Array,
@@ -89,7 +124,7 @@
       required: true,
     },
     currentDirectory: {
-      type: Object,
+      type: String,
       required: true,
     },
     emptyMessage: {
@@ -100,6 +135,8 @@
 
   const emit = defineEmits(["deleted"]);
 
+  const deleteVisible = ref(false);
+
   const selected = ref(null);
   const selectedDirectory = ref(null);
   const selectedType = ref(null);
@@ -107,10 +144,19 @@
   const menu = ref();
   const items = ref([
     {
-      label: "Descargar",
-      icon: "pi pi-download",
+      label: "Eliminar...",
+      icon: "pi pi-trash",
+      command: () => (deleteVisible.value = true),
     },
   ]);
+
+  const handleDeleteDirectory = async () => {
+    const response = await deleteFile(selectedDirectory.value, currentDirectory);
+    if (!response.error) {
+      emit("deleted");
+    }
+    deleteVisible.value = false;
+  };
 
   const onFolderRightClick = (event, id, type) => {
     menu.value.show(event);

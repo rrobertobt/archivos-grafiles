@@ -1,10 +1,10 @@
 const CommonPtOptions = {
   button: {
     root: {
-      class: '!select-none !font-medium',
+      class: '!select-none !py-2 !px-2.5',
     },
     label: {
-      class: 'text-sm',
+      class: 'text-sm !font-medium',
     }
   },
   menu: {
