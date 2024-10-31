@@ -8,12 +8,14 @@ import {
   Delete,
   UseGuards,
   Req,
-  Res,
+  UseInterceptors,
+  UploadedFile,
 } from "@nestjs/common";
 import { FilesService } from "./files.service";
 import { CreateFileDto } from "./dto/create-file.dto";
 import { UpdateFileDto } from "./dto/update-file.dto";
 import { AuthGuard } from "src/auth/auth.guard";
+import { FileInterceptor } from "@nestjs/platform-express";
 
 @Controller("files")
 export class FilesController {
@@ -22,11 +24,6 @@ export class FilesController {
   @Post()
   create(@Body() createFileDto: CreateFileDto) {
     return this.filesService.create(createFileDto);
-  }
-
-  @Get()
-  findAll() {
-    return this.filesService.findAll();
   }
 
   @UseGuards(AuthGuard)
@@ -43,6 +40,17 @@ export class FilesController {
     @Req() request,
   ) {
     return this.filesService.update(id, request.user.sub, updateFileDto);
+  }
+
+  @UseInterceptors(FileInterceptor("file"))
+  @UseGuards(AuthGuard)
+  @Patch(":id/upload")
+  updateFileImage(
+    @Param("id") id: string,
+    @UploadedFile() file: Express.Multer.File,
+    @Req() request,
+  ) {
+    return this.filesService.updateFile(id, request.user.sub, file);
   }
 
   @Delete(":id")

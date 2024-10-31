@@ -37,7 +37,7 @@
                 ? role === 'employee'
                   ? `/employee/files/folder/${archive._id}`
                   : `/admin/files/folder/${archive._id}`
-                : `/employee/files/file/${archive._id}`,
+                : `/admin/files/file/${archive._id}`,
             );
           }
         }
@@ -200,6 +200,11 @@
     selectedDirectory.value = id;
     selectedType.value = type;
     items.value[2].disabled = type === "directory";
+    if (selectedType.value === "directory") {
+      items.value[1].disabled = true
+    } else {
+      items.value[1].disabled = false
+    }
   };
 
   const handleDeleteDirectory = async () => {

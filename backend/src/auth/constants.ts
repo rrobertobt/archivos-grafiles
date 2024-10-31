@@ -1,3 +1,3 @@
 export const jwtConstants = {
-  secret: 'grafiles-secret-key',
+  secret: "grafiles-secret-key",
 };

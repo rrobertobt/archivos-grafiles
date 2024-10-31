@@ -13,7 +13,7 @@
       No se encontró el archivo
     </Message>
   </div>
-  <FileDetailView :data :status @update="refresh" :backRoute />
+  <FileDetailView readonly :data :status @update="refresh" :backRoute />
 </template>
 <script setup>
   import { NuxtLink } from "#components";
@@ -22,12 +22,15 @@
   const { session } = useSessionStore();
   const backRoute = computed(() => {
     if (
+      route.path.includes("shared")
+    ) return "/employee/shared";
+    if (
       session.root_directory._id === data.value?.file?.parent_directory ||
       !data.value
     ) {
-      return "/admin/files";
+      return "/employee/files";
     }
-    return `/admin/files/folder/${data.value?.file?.parent_directory}`;
+    return `/employee/files/folder/${data.value?.file?.parent_directory}`;
   });
 
   const route = useRoute();
@@ -36,7 +39,7 @@
   );
 
   definePageMeta({
-    layout: "admin",
+    layout: "employee",
   });
 </script>
 <style scoped></style>

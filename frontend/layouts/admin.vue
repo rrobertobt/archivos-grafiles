@@ -23,11 +23,6 @@
       <Menu
         :model="[
           {
-            label: 'Inicio',
-            icon: 'lucide:house',
-            to: '/admin',
-          },
-          {
             label: 'Usuarios',
             icon: 'lucide:users',
             to: '/admin/users',
@@ -113,11 +108,6 @@
 
         <Menu
           :model="[
-            {
-              label: 'Inicio',
-              icon: 'lucide:house',
-              to: '/admin',
-            },
             {
               label: 'Usuarios',
               icon: 'lucide:users',

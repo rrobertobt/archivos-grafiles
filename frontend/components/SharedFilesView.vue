@@ -14,15 +14,13 @@
       {{ emptyMessage }}
     </Message>
     <Card
-      pt:root:class="hover:bg-primary/5 !shadow-none border-2 border-primary/10 hover:shadow-md transition-all !select-none"
+      pt:root:class="hover:bg-primary/5 !shadow-none border-2 border-primary/10 hover:shadow-md transition-all !select-none active:ring-2 active:ring-primary-400"
       v-for="archive in subarchives"
       @dblclick="
         navigateTo(
-          archive.type === 'directory'
-            ? role === 'employee'
-              ? `/employee/files/folder/${archive._id}`
-              : `/admin/files/folder/${archive._id}`
-            : `/employee/files/file/${archive._id}`,
+          role === 'employee'
+              ? `/employee/shared/file/${archive._id}`
+              : `/admin/shared/file/${archive._id}`
         )
       "
       :key="archive._id"

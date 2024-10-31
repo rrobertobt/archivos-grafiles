@@ -65,6 +65,7 @@
       username: usernameToShare.value,
     });
     if (!response.error) {
+      usernameToShare.value = "";
       visible.value = false;
       emit("submit");
     }

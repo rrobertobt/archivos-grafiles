@@ -13,9 +13,6 @@ ENV NODE_ENV=production
 ENV VITE_API_HOST=$ARG_API_HOST
 ENV VITE_API_PORT=$ARG_API_PORT
 
-RUN echo "API_HOST: $VITE_API_HOST"
-RUN echo "API_PORT: $VITE_API_PORT"
-
 # Install package manager and utils (pnpm)
 RUN corepack enable
 

@@ -48,6 +48,15 @@ export class DirectoriesService {
     if (!directory) {
       throw new NotFoundException("Directorio no encontrado");
     }
+    // also check if file with same name exists
+    const existingFile = await this.archiveModel.findOne({
+      name: file.originalname,
+      parent_directory: directory._id,
+      in_trash: false,
+    });
+    if (existingFile) {
+      throw new BadRequestException("Archivo con el mismo nombre ya existe");
+    }
 
     const uploadStream = this.fileModel.openUploadStream(file.originalname);
     const readBuffer = new Readable();

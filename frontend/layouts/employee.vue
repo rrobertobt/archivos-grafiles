@@ -19,31 +19,6 @@
             />
         </div>
       </template>
-      <Menu
-        :model="[
-          {
-            label: 'Inicio',
-            icon: 'lucide:house',
-            to: '/employee',
-          },
-        ]"
-        :pt="{
-          root: { class: '!border-none ' },
-          itemContent: { class: 'hover:!bg-primary/20 !rounded-lg' },
-        }"
-      >
-        <template #item="{ item, props }">
-          <NuxtLink
-            active-class="!bg-primary/30"
-            class="flex items-center p-2 rounded-lg my-0.5"
-            :to="item.to"
-            @click="drawerOpen = false"
-          >
-            <Icon :name="item.icon" />
-            <span class="ml-2">{{ item.label }}</span>
-          </NuxtLink>
-        </template>
-      </Menu>
 
       <h4 class="text-lg my-2 font-semibold select-none">Ubicaciones</h4>
 
@@ -69,6 +44,27 @@
           </NuxtLink>
         </template>
       </Menu>
+
+      <h4 class="text-lg my-2 font-semibold select-none">Administración</h4>
+
+        <Menu
+          :model="[
+            { label: 'Perfil', icon: 'lucide:user-pen', to: '/employee/profile' },
+          ]"
+          class="!border-none !bg-transparent"
+        >
+          <template #item="{ item, props }">
+            <NuxtLink
+              active-class="!bg-primary/30"
+              class="flex items-center p-2 rounded-lg my-0.5"
+              :to="item.to"
+              @click="drawerOpen = false"
+            >
+              <Icon :name="item.icon" />
+              <span class="ml-2">{{ item.label }}</span>
+            </NuxtLink>
+          </template>
+        </Menu>
     </Drawer>
     <header
       class="flex py-4 px-4 lg:px-12 lg:max-w-screen-2xl mx-auto w-full justify-between"
@@ -114,31 +110,6 @@
     <Divider pt:root:class="!mt-0" />
     <div class="flex gap-x-7 lg:px-16 px-4 lg:max-w-screen-2xl mx-auto">
       <div class="w-64 shrink-0 hidden lg:block">
-        <Menu
-          :model="[
-            {
-              label: 'Inicio',
-              icon: 'lucide:house',
-              to: '/employee',
-            },
-          ]"
-          :pt="{
-            root: { class: '!border-none ' },
-            itemContent: { class: 'hover:!bg-primary/20 !rounded-lg' },
-          }"
-        >
-          <template #item="{ item, props }">
-            <NuxtLink
-              active-class="!bg-primary/30"
-              class="flex items-center p-2 rounded-lg my-0.5"
-              :to="item.to"
-            >
-              <Icon :name="item.icon" />
-              <span class="ml-2">{{ item.label }}</span>
-            </NuxtLink>
-          </template>
-        </Menu>
-
         <h4 class="text-lg my-2 font-semibold select-none">Ubicaciones</h4>
 
         <Menu
@@ -155,6 +126,26 @@
                 '!bg-primary/30': $route.path.includes(item.to),
               }"
               active-class="!bg-primary/30"
+              :to="item.to"
+            >
+              <Icon :name="item.icon" />
+              <span class="ml-2">{{ item.label }}</span>
+            </NuxtLink>
+          </template>
+        </Menu>
+
+        <h4 class="text-lg my-2 font-semibold select-none">Administración</h4>
+
+        <Menu
+          :model="[
+            { label: 'Perfil', icon: 'lucide:user-pen', to: '/employee/profile' },
+          ]"
+          class="!border-none !bg-transparent"
+        >
+          <template #item="{ item, props }">
+            <NuxtLink
+              active-class="!bg-primary/30"
+              class="flex items-center p-2 rounded-lg my-0.5"
               :to="item.to"
             >
               <Icon :name="item.icon" />
@@ -184,12 +175,7 @@
       label: "Compartidos",
       icon: "lucide:folder-sync",
       to: "/employee/shared",
-    },
-    {
-      label: "Perfil",
-      icon: "lucide:user-pen",
-      to: "/employee/profile",
-    },
+    }
   ]);
 
   import { AuraWithIndigo } from "~/themes/themes";

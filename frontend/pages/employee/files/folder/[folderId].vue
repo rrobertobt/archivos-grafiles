@@ -4,7 +4,6 @@
   </Message>
   <div class="w-full" v-if="data?.results">
     <div class="flex gap-x-2">
-      <FolderDialog :parent-directory-id="route.params.folderId" @saved="refresh"/>
       <FileUploadDialog :parent-directory-id="route.params.folderId" @saved="refresh"/>
     </div>
     <FilesBreadcrum role="employee" :display-path="data.display_path" />

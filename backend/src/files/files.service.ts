@@ -2,7 +2,6 @@ import {
   BadRequestException,
   Injectable,
   NotFoundException,
-  Res,
 } from "@nestjs/common";
 import { CreateFileDto } from "./dto/create-file.dto";
 import {
@@ -39,11 +38,10 @@ export class FilesService {
     return "This action adds a new file";
   }
 
-  findAll() {
-    return `This action returns all files`;
-  }
-
   async findOne(fileId: string, userId: string) {
+    if (!ObjectId.isValid(fileId)) {
+      throw new BadRequestException("ID de archivo inválido");
+    }
     const file = await this.archiveModel.findOne({
       _id: fileId,
       owner: userId,
@@ -126,6 +124,76 @@ export class FilesService {
       default:
         throw new NotFoundException("Acción no encontrada");
     }
+  }
+
+  async updateFile(
+    fileId: string,
+    userId: string,
+    newFile: Express.Multer.File,
+  ) {
+    if (!newFile) {
+      throw new BadRequestException("Archivo a subir no encontrado");
+    }
+    const allowedTypes = ["text/plain", "image/png", "image/jpeg", "text/html"];
+    if (!allowedTypes.includes(newFile.mimetype)) {
+      throw new BadRequestException("Tipo de archivo no permitido");
+    }
+    const user = await this.usersService.findById(userId);
+    if (!user) {
+      throw new NotFoundException("Usuario no encontrado");
+    }
+    const file = await this.archiveModel.findOne({
+      _id: fileId,
+      owner: userId,
+      in_trash: false,
+    });
+    if (!file) {
+      throw new NotFoundException("Archivo no encontrado");
+    }
+
+    // also check if file with same name exists
+    const existingFile = await this.archiveModel.findOne({
+      name: newFile.originalname,
+      parent_directory: file.parent_directory,
+      in_trash: false,
+    });
+    if (existingFile && existingFile.name !== file.name) {
+      throw new BadRequestException(
+        "Archivo con el mismo nombre ya existe en este directorio",
+      );
+    }
+
+    const fileDocument = await this.fileModel.findOne({
+      _id: file.file,
+    });
+
+    // Delete the old file stream
+    await this.fileBucket.delete(fileDocument._id);
+
+    const uploadStream = this.fileBucket.openUploadStream(newFile.originalname);
+    uploadStream.end(newFile.buffer);
+
+    const pathSegments = file.path.split("/");
+    pathSegments.pop();
+    const path = `${pathSegments.join("/")}/${newFile.originalname}`;
+
+    await new Promise<void>((resolve, reject) => {
+      uploadStream.on("finish", async () => {
+        await this.archiveModel.updateOne(
+          { _id: file._id },
+          {
+            name: newFile.originalname,
+            file: uploadStream.id,
+            mime_type: newFile.mimetype,
+            path,
+          },
+        );
+        resolve();
+      });
+      uploadStream.on("error", reject);
+    });
+
+    return await this.findOne(fileId, userId);
   }
 
   remove(id: number) {

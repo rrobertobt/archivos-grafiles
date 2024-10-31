@@ -33,10 +33,10 @@ export const useSessionStore = defineStore('session', () => {
       const role = response.role
       switch (role) {
         case 'admin':
-          navigateTo('/admin')
+          navigateTo('/admin/files')
           break
         case 'employee':
-          navigateTo('/employee')
+          navigateTo('/employee/files')
           break
       }
       return response
