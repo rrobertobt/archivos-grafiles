@@ -14,6 +14,7 @@ Este repositorio contiene todo el código fuente del proyecto GraFiles, el cual 
 
 ### Requisitos
 
+Instalar las siguientes herramientas:
 - Docker
 - Docker Compose
 

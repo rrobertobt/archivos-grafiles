@@ -3,8 +3,7 @@ services:
     build: 
       context: ./frontend
       args:
-        # ARG_API_HOST: http://localhost
-        ARG_API_HOST: http://192.168.31.140
+        ARG_API_HOST: http://localhost
         ARG_API_PORT: 8000  
     ports:
       - "3000:3000"
