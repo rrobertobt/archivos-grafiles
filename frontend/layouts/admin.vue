@@ -102,7 +102,7 @@
       </div>
     </header>
     <Divider pt:root:class="!mt-0" />
-    <div class="flex gap-x-7 px-16 lg:max-w-screen-2xl mx-auto">
+    <div class="flex gap-x-7 lg:px-16 px-4 lg:max-w-screen-2xl mx-auto">
       <div class="w-64 shrink-0 hidden lg:block">
         <h4 class="text-lg my-2 font-semibold select-none">Administración</h4>
 

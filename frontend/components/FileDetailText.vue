@@ -17,6 +17,7 @@
           v-if="data.file.mime_type.includes('text')"
           v-model="data.content"
           autoResize
+          :readonly
           rows="20"
           cols="30"
           class="block md:hidden w-full"

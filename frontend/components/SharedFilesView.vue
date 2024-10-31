@@ -17,11 +17,24 @@
       pt:root:class="hover:bg-primary/5 !shadow-none border-2 border-primary/10 hover:shadow-md transition-all !select-none active:ring-2 active:ring-primary-400"
       v-for="archive in subarchives"
       @dblclick="
-        navigateTo(
-          role === 'employee'
+      () => {
+        if (!smaller('sm').value) {
+          navigateTo(
+            role === 'employee'
               ? `/employee/shared/file/${archive._id}`
-              : `/admin/shared/file/${archive._id}`
-        )
+              : `/admin/shared/file/${archive._id}`,
+          )
+        }}
+      "
+      @click="
+      () => {
+        if (smaller('sm').value) {
+          navigateTo(
+            role === 'employee'
+              ? `/employee/shared/file/${archive._id}`
+              : `/admin/shared/file/${archive._id}`,
+          )
+        }}
       "
       :key="archive._id"
       @contextmenu="onFolderRightClick($event, archive._id, archive.type)"
@@ -107,6 +120,10 @@
   </div>
 </template>
 <script setup>
+import { breakpointsTailwind } from '@vueuse/core';
+
+  const { smaller } = useBreakpoints(breakpointsTailwind);
+
   const { loading } = storeToRefs(useDirectoriesStore());
   const { deleteDirectory, deleteFile, duplicateArchive, moveArchive } =
     useDirectoriesStore();
@@ -149,7 +166,10 @@
   ]);
 
   const handleDeleteDirectory = async () => {
-    const response = await deleteFile(selectedDirectory.value, currentDirectory);
+    const response = await deleteFile(
+      selectedDirectory.value,
+      currentDirectory,
+    );
     if (!response.error) {
       emit("deleted");
     }

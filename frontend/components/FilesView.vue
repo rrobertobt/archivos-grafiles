@@ -19,26 +19,39 @@
       @click="
         () => {
           if (smaller('sm').value) {
-            navigateTo(
-              archive.type === 'directory'
-                ? role === 'employee'
-                  ? `/employee/files/folder/${archive._id}`
-                  : `/admin/files/folder/${archive._id}`
-                : `/employee/files/file/${archive._id}`,
-            );
+            // convert to if else
+            if (archive.type === 'directory') {
+              if (role === 'employee') {
+                navigateTo(`/employee/files/folder/${archive._id}`);
+              } else {
+                navigateTo(`/admin/files/folder/${archive._id}`);
+              }
+            } else if (archive.type === 'file') {
+              if (role === 'employee') {
+                navigateTo(`/employee/files/file/${archive._id}`);
+              } else {
+                navigateTo(`/admin/files/file/${archive._id}`);
+              }
+            }
           }
         }
       "
       @dblclick="
         () => {
           if (!smaller('sm').value) {
-            navigateTo(
-              archive.type === 'directory'
-                ? role === 'employee'
-                  ? `/employee/files/folder/${archive._id}`
-                  : `/admin/files/folder/${archive._id}`
-                : `/admin/files/file/${archive._id}`,
-            );
+            if (archive.type === 'directory') {
+              if (role === 'employee') {
+                navigateTo(`/employee/files/folder/${archive._id}`);
+              } else {
+                navigateTo(`/admin/files/folder/${archive._id}`);
+              }
+            } else if (archive.type === 'file') {
+              if (role === 'employee') {
+                navigateTo(`/employee/files/file/${archive._id}`);
+              } else {
+                navigateTo(`/admin/files/file/${archive._id}`);
+              }
+            }
           }
         }
       "
