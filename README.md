@@ -23,3 +23,14 @@ Instalar las siguientes herramientas:
 1. Clonar el repositorio
 2. Ejecutar el comando `docker compose up` en una terminal en la raíz del proyecto
 3. Acceder a `http://localhost:3000` en un navegador para acceder a la aplicación web
+
+### Notas
+
+La base de datos está pre-cargada con 3 usuarios por defecto:
+
+**2** usuarios tipo *empleado* -
+**1** usuario tipo *administrador*
+
+1. usuario: `empleado1` / contraseña: `empleado1password`
+2. usuario: `empleado2` / contraseña: `empleado2password`
+3. usuario: `admin` / contraseña: `adminpassword`
