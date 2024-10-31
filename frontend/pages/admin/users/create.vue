@@ -1,6 +1,7 @@
 <template>
   <div class="!w-full">
-    <h4 class="text-xl my-2 font-semibold text-muted-color-emphasis">
+    <h4 class="text-xl my-2 font-semibold text-muted-color-emphasis flex items-center">
+      <Icon name="lucide:plus-square" class="mr-2" />
       Crear trabajador
     </h4>
     <Button class="my-4" :as="NuxtLink" to="/admin/users" label="Cancelar">
@@ -57,7 +58,7 @@
       </FloatLabel>
 
       <Button class="col-span-1 lg:col-span-2" 
-      :disabled="!userData.username || !userData.name || !userData.password || !userData.role"
+      :disabled="!userData.username || !userData.name || !userData.password"
       type="submit">
         <Icon name="lucide:save" />
         Guardar usuario

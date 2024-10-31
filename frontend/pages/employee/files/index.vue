@@ -3,12 +3,14 @@
     <div class="flex gap-x-2">
       <FolderDialog :parent-directory-id="root_directory._id" @saved="refresh" />
       <FileUploadDialog :parent-directory-id="root_directory._id" @saved="refresh" />
+      <FileDialog :parent-directory-id="root_directory._id" @saved="refresh" />
     </div>
     <FilesBreadcrum role="employee" :display-path="data.display_path" />
     <FilesView role="employee" :subarchives="data.results.subarchives" @deleted="refresh" :current-directory="root_directory._id" />
   </div>
 </template>
 <script setup>
+import FileDialog from '~/components/FileDialog.vue';
 import FileUploadDialog from '~/components/FileUploadDialog.vue';
 import FolderDialog from '~/components/FolderDialog.vue';
 

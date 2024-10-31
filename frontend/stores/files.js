@@ -107,10 +107,44 @@ export const useFilesStore = defineStore('files',() => {
     }
   }
 
+  async function createFileContent({
+    folderId,
+    fileData
+  }) {
+    loading.value = true
+    console.log(fileData)
+    try {
+      const response = await $api(`/directories/${folderId}/files/content`, {
+        method: 'POST',
+        body: fileData,
+      })
+      toast.add({
+        severity: 'success',
+        summary: 'Archivo',
+        detail: 'Archivo creado correctamente',
+        life: 3000
+      })
+      return {response, error: null}
+    } catch (error) {
+      toast.add({
+        severity: 'error',
+        summary: 'Archivo',
+        detail: error.data.message ?? error.name,
+        life: 3000
+      })
+      return {
+        error: error.data.message ?? error.name
+      } 
+    } finally {
+      loading.value = false
+    }
+  }
+
   return {
     loading,
     shareFileToUser,
     updatePlainContent,
+    createFileContent,
     updateImageContent,
   }
 })

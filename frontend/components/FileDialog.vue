@@ -5,45 +5,97 @@
         <Icon name="lucide:file-plus" />
       </template>
     </Button>
-    <Dialog v-model:visible="visible" modal header="Crear directorio" class="w-10/12 lg:w-3/12">
-      <form
-        class="flex flex-col gap-4"
-        @submit.prevent="handleSubmitDirectory"
-      >
-        <FloatLabel variant="in">
-          <InputText
-          fluid
-            :disabled="loading"
-            v-model="fileName"
-            id="folder-name"
-            class="flex-auto"
-            autocomplete="off"
-            autofocus
-          />
-          <label for="folder-name">Nombre</label>
-        </FloatLabel>
-        <Button type="submit" color="primary" :loading="loading">
-          Crear
-        </Button>
+    <Dialog
+      v-model:visible="visible"
+      modal
+      header="Crear archivo"
+      class="w-full lg:w-8/12"
+      maximizable
+      @hide="() => (fileData = { name: '', extension: '', content: '' })"
+    >
+      <form class="flex flex-col gap-4" @submit.prevent="handleSubmitDirectory">
+        <div class="flex gap-4">
+          <!-- equal width for these 2 fields -->
+          <FloatLabel variant="in" class="basis-0 grow">
+            <InputText
+              fluid
+              :disabled="loading"
+              v-model="fileData.name"
+              id="folder-name"
+              autocomplete="off"
+              variant="filled"
+              autofocus
+            />
+            <label for="folder-name">Nombre</label>
+          </FloatLabel>
+          <FloatLabel class="basis-0 grow" variant="in" >
+            <Select
+              v-model="fileData.extension"
+              inputId="extension"
+              :options="['txt', 'html']"
+              fluid
+              variant="filled"
+            />
+            <label for="extension">Extensión</label>
+          </FloatLabel>
+        </div>
+
+        <h6 class="text-base font-semibold text-color">Contenido</h6>
+
+        <Textarea
+          v-model="fileData.content"
+          autoResize
+          rows="20"
+          cols="30"
+          class="block md:hidden w-full"
+        />
+        <ClientOnly>
+          <VueMonacoEditor
+            v-model:value="fileData.content"
+            :theme="isDark ? 'vs-dark' : 'vs'"
+            :language="editorLanguage"
+            className="ring-2 hidden md:block h-[35rem] w-full ring-primary-emphasis-alt/10 px-1.5 rounded-lg"
+            :options="{
+              formatOnType: true,
+              formatOnPaste: true,
+              fontFamily: 'Geist Mono, ui-monospace',
+              fontSize: 15,
+            }"
+          >
+            {{ "Cargando editor..." }}
+          </VueMonacoEditor>
+        </ClientOnly>
+
+        <Button type="submit" color="primary" :loading="loading" label="Crear" icon="pi pi-check" />
       </form>
     </Dialog>
   </div>
 </template>
 <script setup>
-  const directoriesStore = useDirectoriesStore();
-  const { createDirectory } = directoriesStore;
-  const { loading } = storeToRefs(directoriesStore);
+import { VueMonacoEditor } from '@guolao/vue-monaco-editor';
 
-  const fileName = ref("");
+  const filesStore = useFilesStore();
+  const { createFileContent } = filesStore;
+  const { loading } = storeToRefs(filesStore);
+
+  const fileData = ref({
+    name: "",
+    extension: "",
+    content: "",
+  });
 
   const handleSubmitDirectory = async () => {
-    const response = await createDirectory({
-      name: fileName.value,
-      parentId: parentDirectoryId,
+    const response = await createFileContent({
+      folderId: parentDirectoryId,
+      fileData: fileData.value,
     });
     if (!response.error) {
       visible.value = false;
-      fileName.value = "";
+      fileData.value = {
+        name: "",
+        extension: "",
+        content: "",
+      };
       emit("saved");
     }
   };
@@ -57,4 +109,10 @@
 
   const emit = defineEmits(["saved"]);
   const visible = ref(false);
+
+
+  const isDark = usePreferredDark();
+  const editorLanguage = computed(() => {
+    if (fileData.value.extension === "html") return "html";
+  });
 </script>

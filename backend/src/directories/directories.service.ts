@@ -4,7 +4,11 @@ import {
   Injectable,
   NotFoundException,
 } from "@nestjs/common";
-import { CreateArchiveDto } from "./dto/create-directory.dto";
+import {
+  CreateArchiveDto,
+  CreateFileInDirectoryDto,
+  extensionMimeTypeMap,
+} from "./dto/create-directory.dto";
 import { MoveArchiveDto, UpdateArchiveDto } from "./dto/update-directory.dto";
 import { InjectConnection, InjectModel } from "@nestjs/mongoose";
 import { Connection, Model } from "mongoose";
@@ -24,6 +28,76 @@ export class DirectoriesService {
     this.fileModel = new GridFSBucket(this.connection.db, {
       bucketName: "uploads",
     });
+  }
+
+  async createFile(
+    userId: string,
+    folderId: string,
+    createFileInDirectoryDto: CreateFileInDirectoryDto,
+  ) {
+    const user = await this.usersService.findById(userId);
+    if (!user) {
+      throw new NotFoundException("Usuario no encontrado");
+    }
+
+    const directory = await this.archiveModel.findOne({
+      _id: folderId,
+      owner: userId,
+      in_trash: false,
+    });
+    if (!directory) {
+      throw new NotFoundException("Directorio no encontrado");
+    }
+
+    const existingFile = await this.archiveModel.findOne({
+      name:
+        createFileInDirectoryDto.name +
+        "." +
+        createFileInDirectoryDto.extension,
+      parent_directory: directory._id,
+      in_trash: false,
+    });
+    if (existingFile) {
+      throw new BadRequestException("Archivo con el mismo nombre ya existe");
+    }
+
+    const normalizedName = createFileInDirectoryDto.name
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/\//g, "");
+
+    const uploadStream = this.fileModel.openUploadStream(
+      `${normalizedName}.${createFileInDirectoryDto.extension}`,
+    );
+    const readBuffer = new Readable();
+    readBuffer.push(createFileInDirectoryDto.content);
+    readBuffer.push(null);
+    readBuffer.pipe(uploadStream);
+
+    const path = `${directory.path}/${normalizedName}`;
+
+    const insertedFile = await new Promise<Archive>((resolve, reject) => {
+      uploadStream.on("finish", async () => {
+        const created = await this.archiveModel.create({
+          name: normalizedName + "." + createFileInDirectoryDto.extension,
+          owner: user._id,
+          mime_type: extensionMimeTypeMap[createFileInDirectoryDto.extension],
+          file: uploadStream.id,
+          parent_directory: directory._id,
+          type: "file",
+          path,
+        });
+
+        await this.archiveModel.updateOne(
+          { _id: directory._id },
+          { $push: { subarchives: created._id } },
+        );
+        resolve(created);
+      });
+      uploadStream.on("error", reject);
+    });
+
+    return insertedFile;
   }
 
   async upload(userId: string, folderId: string, file: Express.Multer.File) {

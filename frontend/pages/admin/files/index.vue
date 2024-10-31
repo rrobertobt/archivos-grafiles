@@ -3,6 +3,7 @@
     <div class="flex gap-x-2">
       <FolderDialog :parent-directory-id="root_directory._id" @saved="refresh" />
       <FileUploadDialog :parent-directory-id="root_directory._id" @saved="refresh" />
+      <FileDialog :parent-directory-id="root_directory._id" @saved="refresh" />
     </div>
     <FilesBreadcrum role="admin" :display-path="data.display_path" />
     <FilesView role="admin" :subarchives="data.results.subarchives" @deleted="refresh" :current-directory="root_directory._id" />

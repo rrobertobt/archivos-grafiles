@@ -1,30 +1,4 @@
 <template>
-  <button
-  @click="()=>{
-    credentials.username = 'empleado1'
-    credentials.password = 'empleado1password'
-  }"
-  >
-    set test data employee
-  </button>
-  <button
-  class="block"
-  @click="()=>{
-    credentials.username = 'empleado2'
-    credentials.password = 'empleado2password'
-  }"
-  >
-    set test data employee 2
-  </button>
-  <button
-  class="block"
-  @click="()=>{
-    credentials.username = 'admin'
-    credentials.password = 'adminpassword'
-  }"
-  >
-    set test data admin
-  </button>
   <div class="min-h-screen flex items-center justify-center p-4">
     <Card class="p-3 w-full md:w-4/12">
       <template #title>

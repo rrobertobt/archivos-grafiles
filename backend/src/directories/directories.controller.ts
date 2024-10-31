@@ -14,7 +14,10 @@ import {
 import { DirectoriesService } from "./directories.service";
 import { UpdateArchiveDto } from "./dto/update-directory.dto";
 import { AuthGuard } from "src/auth/auth.guard";
-import { CreateArchiveDto } from "./dto/create-directory.dto";
+import {
+  CreateArchiveDto,
+  CreateFileInDirectoryDto,
+} from "./dto/create-directory.dto";
 import { FileInterceptor } from "@nestjs/platform-express";
 
 @Controller("directories")
@@ -36,6 +39,20 @@ export class DirectoriesController {
     @Param("id") folderId: string,
   ) {
     return this.directoriesService.upload(req.user.sub, folderId, file);
+  }
+
+  @UseGuards(AuthGuard)
+  @Post(":id/files/content")
+  createFile(
+    @Req() req,
+    @Param("id") folderId: string,
+    @Body() createFileInDirectoryDto: CreateFileInDirectoryDto,
+  ) {
+    return this.directoriesService.createFile(
+      req.user.sub,
+      folderId,
+      createFileInDirectoryDto,
+    );
   }
 
   @UseGuards(AuthGuard)
